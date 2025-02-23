@@ -40,10 +40,20 @@ module.exports.index = async (req, res) => {
     );
     // end pagination
 
+    // Sort
+    let sort = {};
+
+    if (req.query.sortKey && req.query.sortValue) {
+        sort[req.query.sortKey] = req.query.sortValue;
+    } else {
+        sort.position = "desc";
+    }
+
+
+    // end Sort
+
     const products = await Product.find(find)
-        .sort({
-            position: "desc"
-        })
+        .sort(sort)
         .limit(objectPageination.limitItem)
         .skip(objectPageination.skip);
 
@@ -168,6 +178,7 @@ module.exports.createPost = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
+
     const product = new Product(req.body);
     await product.save();
 
@@ -232,7 +243,7 @@ module.exports.detail = async (req, res) => {
             deleted: false,
             _id: id
         }
-        
+
         const product = await Product.findOne(find);
 
         // console.log(product);

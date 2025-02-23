@@ -37,7 +37,7 @@ router.get("/edit/:id", controller.edit);
 
 router.patch(
     "/edit/:id",
-    upload.single("thumbnail"),
+    uploadCloud.upload,
     validate.createPost, // cần phải đi quan validate(còn gọi là trung gian la --next--)
     controller.editPatch
 );
