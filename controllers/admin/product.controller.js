@@ -147,13 +147,13 @@ module.exports.deleteItem = async (req, res) => {
     // console.log(req.params);// in ra status vs id (trong route cua url)
     const id = req.params.id;
 
-    // await Product.deleteOne({ _id: id }); // xoa cung
-    await Product.updateOne({
-        _id: id
-    }, {
-        deleted: true,
-        deletedAt: new Date()
-    }); // xoa mem
+    await Product.deleteOne({ _id: id }); // xoa cung
+    // await Product.updateOne({
+    //     _id: id
+    // }, {
+    //     deleted: true,
+    //     deletedAt: new Date()
+    // }); // xoa mem
 
     res.redirect("back");
 };

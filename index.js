@@ -1,5 +1,7 @@
 const express = require("express");
 
+const path = require("path"); // tinymce
+
 // cookie-parser
 const cookieParser = require("cookie-parser");
 
@@ -37,19 +39,29 @@ const port = process.env.PORT;
 
 app.use(methodOverride("_method"));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 app.use(express.static(`${__dirname}/public`)); // co the su dung public de show anh
-                                   // file tĩnh 
+// file tĩnh 
 
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 // flash
 app.use(cookieParser('Ducno96421'));
-app.use(session({ cookie: { maxAge: 60000 }}));
+app.use(session({
+    cookie: {
+        maxAge: 60000
+    }
+}));
 app.use(flash());
 // end flash
+
+// TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+// end TinyMCE
 
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
