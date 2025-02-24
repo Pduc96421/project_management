@@ -3,6 +3,7 @@ const dasboardRoutes = require("./dasboard.route");
 const systemConfig = require("../../config/system"); // luu tru cac dinh nghia(Path_ADMIN)
 
 const productRoutes = require("./product.route");
+const productCategoryRoutes = require("./products-category.route");
 
 
 module.exports = (app) => {
@@ -11,5 +12,7 @@ module.exports = (app) => {
     app.use(Path_ADMIN + "/dasboard", dasboardRoutes);
 
     app.use(Path_ADMIN + "/products", productRoutes);
+
+    app.use(Path_ADMIN + "/products-category", productCategoryRoutes);
 
 }

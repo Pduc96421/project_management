@@ -52,14 +52,14 @@ module.exports.index = async (req, res) => {
 
     // end Sort
 
-    const products = await Product.find(find)
+    const records = await Product.find(find)
         .sort(sort)
         .limit(objectPageination.limitItem)
         .skip(objectPageination.skip);
 
     res.render("admin/pages/products/index", {
         pageTitle: "Danh sách sản phẩm",
-        products: products,
+        products: records,
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
         pagination: objectPageination
@@ -178,9 +178,8 @@ module.exports.createPost = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
-
-    const product = new Product(req.body);
-    await product.save();
+    const record = new Product(req.body);
+    await record.save();
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
