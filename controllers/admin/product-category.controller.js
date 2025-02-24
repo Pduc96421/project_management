@@ -1,8 +1,8 @@
 const ProductCategory = require("../../models/product-category.model");
-
 const systemConfig = require("../../config/system");
-
+const searchHelper = require("../../helpers/search");
 const createTreeHelper = require("../../helpers/create-tree");
+const filterStatusHelper = require("../../helpers/filterStatus");
 
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
@@ -10,22 +10,51 @@ module.exports.index = async (req, res) => {
         deleted: false
     };
 
-    const records = await ProductCategory.find(find);
+    // Bộ lọclọc
+    const filterStatus = filterStatusHelper(req.query);
+    // end bộ lọc 
+
+    if (req.query.status) {
+        find.status = req.query.status;
+    }
+
+    // find form-word
+    const objectSearch = searchHelper(req.query);
+
+    if (objectSearch.regex) {
+        find.title = objectSearch.regex;
+    }
+    // end find form-word
+
+    // Sort
+    let sort = {};
+
+    if (req.query.sortKey && req.query.sortValue) {
+        sort[req.query.sortKey] = req.query.sortValue;
+    } else {
+        sort.position = "desc";
+    }
+    // end Sort
+
+    const records = await ProductCategory.find(find)
+        .sort(sort)
 
     const newRecords = createTreeHelper.tree(records);
 
     res.render("admin/pages/products-category/index", {
         pageTitle: "Danh mục sản phẩm",
         records: newRecords,
+        keyword: objectSearch.keyword,
+        filterStatus: filterStatus,
     });
 }
 
 // [GET] /admin/product-category/create
 module.exports.create = async (req, res) => {
-    let find ={
+    let find = {
         deleted: false,
     }
-    
+
     const records = await ProductCategory.find(find);
 
     const newRecords = createTreeHelper.tree(records);
@@ -49,4 +78,4 @@ module.exports.createPost = async (req, res) => {
     await record.save();
 
     res.redirect(`${systemConfig.prefixAdmin}/products-category`);
-}; 
+};

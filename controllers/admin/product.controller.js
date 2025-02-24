@@ -48,8 +48,6 @@ module.exports.index = async (req, res) => {
     } else {
         sort.position = "desc";
     }
-
-
     // end Sort
 
     const records = await Product.find(find)
@@ -231,7 +229,6 @@ module.exports.editPatch = async (req, res) => {
 
     res.redirect("back");
 };
-
 
 // [GET] /admin/products/detail/:id
 module.exports.detail = async (req, res) => {

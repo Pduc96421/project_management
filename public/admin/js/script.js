@@ -216,7 +216,7 @@ if (sort) {
     const sortSelect = sort.querySelector("[sort-select]");
     const sortClear = sort.querySelector("[sort-clear]");
 
-    // sắp xếpxếp
+    // sắp xếp
     sortSelect.addEventListener("change", (e) => {
         const value = e.target.value;
         const [sortKey, sortValue] = value.split("-");
@@ -226,8 +226,8 @@ if (sort) {
 
         window.location.href = url.href;
     });
-
     // xóa sắp xếp
+
     sortClear.addEventListener("click", () => {
         url.searchParams.delete("sortKey");
         url.searchParams.delete("sortValue");
@@ -244,6 +244,5 @@ if (sort) {
         const optionSelected = sortSelect.querySelector(`option[value='${stringSort}']`); 
         optionSelected.selected = true;
     }
-
 }
 // end Sort
