@@ -1,8 +1,10 @@
 const ProductCategory = require("../../models/product-category.model");
+
 const systemConfig = require("../../config/system");
 const searchHelper = require("../../helpers/search");
 const createTreeHelper = require("../../helpers/create-tree");
 const filterStatusHelper = require("../../helpers/filterStatus");
+const Product = require("../../models/product.model");
 
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
@@ -78,4 +80,98 @@ module.exports.createPost = async (req, res) => {
     await record.save();
 
     res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+};
+
+// [PATCH] /adim/products-category/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    // console.log(req.params);// in ra status vs id (trong route cua url)
+    const status = req.params.status;
+    const id = req.params.id;
+
+    await ProductCategory.updateOne({
+        _id: id
+    }, {
+        status: status
+    });
+
+    req.flash("success", "cập nhật trạng thái thành công!");
+
+    res.redirect("back");
+};
+
+//[DELETE] /adim/products-category/delete/:id 
+module.exports.deleteItem = async (req, res) => {
+    // console.log(req.params);// in ra status vs id (trong route cua url)
+    const id = req.params.id;
+
+    await ProductCategory.deleteOne({ _id: id }); // xoa cung
+    // await Product.updateOne({
+    //     _id: id
+    // }, {
+    //     deleted: true,
+    //     deletedAt: new Date()
+    // }); // xoa mem
+
+    req.flash("success", "Đã xóa thành công!");
+
+    res.redirect("back");
+};
+
+//[PATCH] /adim/products-category/change-multi
+module.exports.changeMulti = async (req, res) => {
+    const type = req.body.type; // lấy ở trong pug (name)
+    const ids = req.body.ids.split(", ");
+
+    switch (type) {
+        case "active":
+            await ProductCategory.updateMany({
+                _id: {
+                    $in: ids
+                }
+            }, {
+                status: "active"
+            });
+            req.flash("success", `cập nhập trạng thái thành công ${ids.length} sản phẩm!`);
+            break;
+        case "inactive":
+            await ProductCategory.updateMany({
+                _id: {
+                    $in: ids
+                }
+            }, {
+                status: "inactive"
+            });
+            req.flash("success", `cập nhập trạng thái thành công ${ids.length} sản phẩm!`);
+            break;
+
+        case "delete-all":
+            await ProductCategory.updateMany({
+                _id: {
+                    $in: ids
+                }
+            }, {
+                deleted: true,
+                deletedAt: new Date()
+            });
+            req.flash("success", `đã xóa thành công ${ids.length} sản phẩm!`);
+            break;
+
+        case "change-position":
+            for (const item of ids) {
+                let [id, position] = item.split("-");
+                position = parseInt(position);
+                await ProductCategory.updateOne({
+                    _id: id
+                }, {
+                    position: position
+                });
+            };
+            req.flash("success", `đã đổi thành công ${ids.length} sản phẩm!`);
+            break;
+
+        default:
+            break;
+    }
+
+    res.redirect("back");
 };

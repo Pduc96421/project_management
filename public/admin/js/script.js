@@ -1,4 +1,4 @@
-// button status
+// button status filter-status
 const buttonStatus = document.querySelectorAll("[button-status]");
 if (buttonStatus.length > 0) {
 
@@ -98,7 +98,7 @@ if (formChangeMulti) {
         event.preventDefault();
 
         const checkboxMulti = document.querySelector("[checkbox-multi]");
-        const inputschecked = checkboxMulti.querySelectorAll(
+        const inputsChecked = checkboxMulti.querySelectorAll(
             "input[name='id']:checked"
         );
 
@@ -112,11 +112,11 @@ if (formChangeMulti) {
             }
         }
 
-        if (inputschecked.length > 0) {
+        if (inputsChecked.length > 0) {
             let ids = [];
             const inputIds = formChangeMulti.querySelector("input[name='ids']");
 
-            inputschecked.forEach(input => {
+            inputsChecked.forEach(input => {
                 const id = input.value;
 
                 if (typeChange == "change-position") {

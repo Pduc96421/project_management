@@ -64,7 +64,7 @@ module.exports.index = async (req, res) => {
     });
 }
 
-//[PATCH] /adim/products/change-status/:status/:id
+// [PATCH] /adim/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
     // console.log(req.params);// in ra status vs id (trong route cua url)
     const status = req.params.status;
@@ -130,7 +130,7 @@ module.exports.changeMulti = async (req, res) => {
                     position: position
                 });
             };
-            req.flash("success", `đã đổiđổi thành công ${ids.length} sản phẩm!`);
+            req.flash("success", `đã đổi thành công ${ids.length} sản phẩm!`);
             break;
 
         default:
@@ -152,6 +152,8 @@ module.exports.deleteItem = async (req, res) => {
     //     deleted: true,
     //     deletedAt: new Date()
     // }); // xoa mem
+
+    req.flash("success", "Đã xóa thành công!");
 
     res.redirect("back");
 };

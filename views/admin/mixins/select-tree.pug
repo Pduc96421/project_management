@@ -1,4 +1,4 @@
-mixin select-tree(items, level = 1)
+mixin select-tree(items, level = 0)
     each item in items
         - const prefix = Array(level + 1).join("-- ")
         option(value=item.id) #{prefix}#{item.title}
