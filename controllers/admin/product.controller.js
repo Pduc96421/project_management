@@ -208,13 +208,20 @@ module.exports.edit = async (req, res) => {
         }
 
         const product = await Product.findOne(find);
+    
+        const category = await ProductCategory.find({
+            deleted: false,
+        });
+    
+        const newCategory = createTreeHelper.tree(category);
 
         // console.log(product);
 
         if (product) {
             res.render("admin/pages/products/edit", {
                 pageTitle: "Chỉnh sửa sản phẩm",
-                product: product
+                product: product,
+                category: newCategory,
             });
         } else {
             res.redirect(`${systemConfig.prefixAdmin}/products`);
