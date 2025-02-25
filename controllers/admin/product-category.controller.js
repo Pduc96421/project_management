@@ -4,7 +4,6 @@ const systemConfig = require("../../config/system");
 const searchHelper = require("../../helpers/search");
 const createTreeHelper = require("../../helpers/create-tree");
 const filterStatusHelper = require("../../helpers/filterStatus");
-const Product = require("../../models/product.model");
 
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
@@ -104,7 +103,9 @@ module.exports.deleteItem = async (req, res) => {
     // console.log(req.params);// in ra status vs id (trong route cua url)
     const id = req.params.id;
 
-    await ProductCategory.deleteOne({ _id: id }); // xoa cung
+    await ProductCategory.deleteOne({
+        _id: id
+    }); // xoa cung
     // await Product.updateOne({
     //     _id: id
     // }, {
@@ -175,3 +176,59 @@ module.exports.changeMulti = async (req, res) => {
 
     res.redirect("back");
 };
+
+// [GET] /admin/product-category/edit/:id
+module.exports.edit = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const find = {
+            deleted: false,
+            _id: id
+        }
+
+        const data = await ProductCategory.findOne(find);
+
+        const records = await ProductCategory.find({
+            deleted: false,
+        });
+
+        const newRecords = createTreeHelper.tree(records);
+
+        res.render("admin/pages/products-category/edit", {
+            pageTitle: "chỉnh sửa danh mục sản phẩm",
+            data: data,
+            records: newRecords,
+        });
+    } catch (error) {
+        res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+    }
+}
+
+// [PATCH] /admin/products-category/edit/:id
+module.exports.editPatch = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        req.body.price = parseInt(req.body.price);
+        req.body.discountPercentage = parseInt(req.body.discountPercentage);
+        req.body.stock = parseInt(req.body.stock);
+        if (req.body.position) {
+            req.body.position = parseInt(req.body.position);
+        } else {
+            const countProducts = await Product.countDocuments({});
+            req.body.position = countProducts + 1;
+        }
+
+        await ProductCategory.updateOne({
+            _id: id,
+            deleted: false
+        }, req.body);
+
+        req.flash("success", "Cập nhật sản phẩm thành công!");
+    } catch (error) {
+        req.flash("error", "Id sản phẩm không hợp lệ!");
+    }
+
+    res.redirect("back");
+}
