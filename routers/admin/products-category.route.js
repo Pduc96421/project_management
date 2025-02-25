@@ -5,7 +5,6 @@ const router = express.Router();
 
 const controller = require("../../controllers/admin/product-category.controller");
 const validate = require("../../validates/admin/product-category.validate");
-
 const upload = multer();
 const uploadCloud = require("../../middlewares/admin/uploadCloud.middlewares");
 

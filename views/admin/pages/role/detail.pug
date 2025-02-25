@@ -1,0 +1,15 @@
+extends ../../layouts/default.pug
+
+block main
+    h1(class="mb-4") Chi tiết sản phẩm
+
+    if (data.title)
+        div(class="mb-4") #{data.title}
+
+    if (data.description)
+        div(class="mb-4") #{data.description}
+
+    a(
+        href=`${prefixAdmin}/products/detail/${data.id}`
+        class="btn btn-warning"
+    ) Chỉnh sửa
