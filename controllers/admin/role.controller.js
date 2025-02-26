@@ -85,3 +85,51 @@ module.exports.detail = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/roles`);
     }
 }
+
+//[DELETE] /adim/products/delete/:id 
+module.exports.deleteItem = async (req, res) => {
+    // console.log(req.params);// in ra status vs id (trong route cua url)
+    const id = req.params.id;
+
+    await Role.deleteOne({
+        _id: id
+    }); // xoa cung
+    // await Product.updateOne({
+    //     _id: id
+    // }, {
+    //     deleted: true,
+    //     deletedAt: new Date()
+    // }); // xoa mem
+
+    req.flash("success", "Đã xóa thành công!");
+
+    res.redirect("back");
+};
+
+// [GET] /admin/roles/permissions
+module.exports.permissions = async (req, res) => {
+
+    const records = await Role.find({
+        deleted: false,
+    });
+
+    res.render("admin/pages/role/permission", {
+        pageTitle: "Phân quyền",
+        records: records,
+    });
+}
+
+// [PATCH}] /admin/roles/permissions
+module.exports.permissionsPatch = async (req, res) => {
+    const permissions = JSON.parse(req.body.permissions);
+
+    for (const item of permissions){
+        const id = item.id;
+        const permissions = item.permissions;
+        await Role.updateOne({ _id: id }, { permissions: permissions });
+    }
+
+    req.flash("success", "Cập nhập phân quyền thành công");
+
+    res.redirect("back")
+}
