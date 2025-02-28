@@ -5,6 +5,7 @@ const systemConfig = require("../../config/system"); // luu tru cac dinh nghia(P
 const productRoutes = require("./product.route");
 const productCategoryRoutes = require("./products-category.route");
 const roleRoutes = require("./role.route");
+const accountRoutes = require("./accounts.route");
 
 module.exports = (app) => {
     const Path_ADMIN = systemConfig.prefixAdmin;
@@ -16,5 +17,6 @@ module.exports = (app) => {
     app.use(Path_ADMIN + "/products-category", productCategoryRoutes);
 
     app.use(Path_ADMIN + "/roles", roleRoutes);
-
+    
+    app.use(Path_ADMIN + "/accounts", accountRoutes);
 }

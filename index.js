@@ -17,7 +17,6 @@ const bodyParser = require("body-parser");
 // method override (trong pug dùng được patch)
 const methodOverride = require("method-override");
 
-
 require("dotenv").config();
 
 // database
@@ -31,7 +30,7 @@ const systemConfig = require("./config/system");
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL);
 
-const route = require("./routers/client/index.route");
+const routeClient = require("./routers/client/index.route");
 const routeaAdmin = require("./routers/admin/index.route");
 
 const app = express();
@@ -67,7 +66,7 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
 // Router
-route(app);
+routeClient(app);
 routeaAdmin(app);
 
 app.listen(port, () => {
