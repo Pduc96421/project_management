@@ -47,24 +47,24 @@ block main
                 id="phone"
                 name="phone"
             )
-            div(
-                class="form-group"
-                load-image
-            )
-        label(for="avatar") Avatar
-            input(
-                type="file"
-                class="form-control-file"
-                id="avatar"
-                name="avatar"
-                accept="image/*"
-                upload-image-input
-            )
-            img(
-                src=""
-                class="image-preview"
-                upload-image-preview
-            )
+        div(
+            class="form-group"
+            load-image
+        )
+            label(for="avatar") Avatar
+                input(
+                    type="file"
+                    class="form-control-file"
+                    id="avatar"
+                    name="avatar"
+                    accept="image/*"
+                    upload-image-input
+                )
+                img(
+                    src=""
+                    class="image-preview"
+                    upload-image-preview
+                )
         div(class="form-group")
             label(for="role_id") Phân quyền
             select(name="role_id" id="role_id" class="form-control")

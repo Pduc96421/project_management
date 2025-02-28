@@ -11,7 +11,7 @@ module.exports.index = async (req, res) => {
 
     const records = await Account.find(find).select("-password -token");
 
-    for (const record of records){
+    for (const record of records) {
         const role = await Role.findOne({
             _id: record.role_id,
             deleted: false,
@@ -40,12 +40,12 @@ module.exports.create = async (req, res) => {
 //[POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => {
     const emailExist = await Account.findOne({
-        email: req.boday.email,
+        email: req.body.email,
         deleted: false,
     });
 
     if (emailExist) {
-        req.flash("error", "Email đã tồn tại");
+        req.flash("error", `Email ${req.body.email} đã tồn tại`);
         res.redirect("back");
     } else {
         req.body.password = md5(req.body.password);
@@ -142,15 +142,86 @@ module.exports.detail = async (req, res) => {
             _id: id
         }
 
-        const data = await Account.findOne(find);
+        const data = await Account.findOne(find).select("-password -token");
 
-        // console.log(product);
+        const role = await Role.findOne({
+            _id: data.role_id,
+            deleted: false,
+        });
+
+        data.roleTitle = role.title;
 
         res.render("admin/pages/accounts/detail", {
-            pageTitle: data.title,
+            pageTitle: data.fullName,
             data: data,
         });
     } catch (error) {
         res.redirect(`${systemConfig.prefixAdmin}/accounts`);
     }
 }
+
+//[Get] /admin/accounts/edit/:id
+module.exports.edit = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const find = {
+            deleted: false,
+            _id: id
+        }
+
+        const data = await Account.findOne(find);
+
+        const roles = await Role.find({
+            deleted: false,
+        });
+
+        if (data) {
+            res.render("admin/pages/accounts/edit", {
+                pageTitle: "Chỉnh sửa sản phẩm",
+                data: data,
+                roles: roles,
+            });
+        } else {
+            res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+        }
+    } catch (error) {
+        res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+    }
+}
+
+// [PATCH] /admin/accounts/edit/:id
+module.exports.editPatch = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const emailExist = await Account.findOne({
+            _id: {
+                $ne: id
+            },
+            email: req.body.email,
+            deleted: false,
+        });
+
+        if (emailExist) {
+            req.flash("error", `Email ${req.body.email} đã tồn tại`);
+        } else {
+            if (req.body.password) {
+                req.body.password = md5(req.body.password);
+            } else {
+                delete req.body.password;
+            }
+
+            await Account.updateOne({
+                _id: id,
+                deleted: false,
+            }, req.body);
+
+            req.flash("success", "Cập nhật tài khoản thành công!");
+        }
+    } catch (error) {
+        req.flash("error", "không hợp lệ!");
+    }
+
+    res.redirect("back");
+};
