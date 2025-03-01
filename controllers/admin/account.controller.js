@@ -178,7 +178,7 @@ module.exports.edit = async (req, res) => {
 
         if (data) {
             res.render("admin/pages/accounts/edit", {
-                pageTitle: "Chỉnh sửa sản phẩm",
+                pageTitle: "Chỉnh sửa tài khoản",
                 data: data,
                 roles: roles,
             });
