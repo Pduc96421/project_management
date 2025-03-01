@@ -53,6 +53,8 @@ module.exports.createPost = async (req, res) => {
         const records = new Account(req.body);
         await records.save();
 
+        req.flash("success", "Đã tạo tài khoản thành công!");
+
         res.redirect(`${systemConfig.prefixAdmin}/accounts`);
     }
 }

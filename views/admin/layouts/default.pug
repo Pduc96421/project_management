@@ -9,23 +9,27 @@ html
         link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
     
     body 
-        include ../partials/header.pug
 
-        .body 
+        if (role.permissions.length > 0)
+            include ../partials/header.pug
 
-            include ../partials/sider.pug
+            .body 
 
-            .main 
-                block main
+                include ../partials/sider.pug
 
-        //- file nhúm boottrap4
-        script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js") 
-        script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js") 
-        //- end file nhúm boottrap4
+                .main 
+                    block main
 
-        //- file nhúm tinymce
-        script(src="/tinymce/tinymce.min.js")
-        script(src="/admin/js/tinymce-config.js") 
-        //- end file nhúm tinymce
-       
-        script(src="/admin/js/script.js")
+            //- file nhúm boottrap4
+            script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js") 
+            script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js") 
+            //- end file nhúm boottrap4
+
+            //- file nhúm tinymce
+            script(src="/tinymce/tinymce.min.js")
+            script(src="/admin/js/tinymce-config.js") 
+            //- end file nhúm tinymce
+        
+            script(src="/admin/js/script.js")
+        else 
+            h1 Bạn không có quyền truy cập
