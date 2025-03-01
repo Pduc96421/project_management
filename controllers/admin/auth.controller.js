@@ -6,9 +6,15 @@ const systemConfig = require("../../config/system");
 
 //[Get] /admin/auth/login
 module.exports.login = (req, res) => {
-    res.render("admin/pages/auth/login", {
-        pageTitle: "Đăng nhập"
-    });
+    const token = req.cookies.token;
+
+    if (token) {
+        res.redirect(`${systemConfig.prefixAdmin}/dasboard`);
+    } else {
+        res.render("admin/pages/auth/login", {
+            pageTitle: "Đăng nhập"
+        });
+    }
 }
 
 //[Post] /admin/auth/login
@@ -27,19 +33,26 @@ module.exports.loginPost = async (req, res) => {
         return;
     }
 
-    if(md5(password) != user.password){
+    if (md5(password) != user.password) {
         req.flash("error", "Sai mật khẩu");
         res.redirect("back");
         return;
     }
 
-    if(user.status == "inactive"){
+    if (user.status == "inactive") {
         req.flash("error", "Tài khoản này đã bị khóa");
         res.redirect("back");
         return;
     }
 
     res.cookie("token", user.token);
-    
+
     res.redirect(`${systemConfig.prefixAdmin}/dasboard`);
+}
+
+//[Get] /admin/auth/logout
+module.exports.logout = (req, res) => {
+    // xóa token trong cookie
+    res.clearCookie("token");
+    res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
 }

@@ -19,16 +19,16 @@ const methodOverride = require("method-override");
 
 require("dotenv").config();
 
-// database
-const database = require("./config/database");
-database.connect();
-
 // app local
 const systemConfig = require("./config/system");
 
 // mongoose
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL);
+
+// database
+const database = require("./config/database");
+database.connect();
 
 const routeClient = require("./routers/client/index.route");
 const routeaAdmin = require("./routers/admin/index.route");
