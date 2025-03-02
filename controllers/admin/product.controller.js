@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 
 const systemConfig = require("../../config/system");
 
@@ -56,6 +57,16 @@ module.exports.index = async (req, res) => {
         .sort(sort)
         .limit(objectPageination.limitItem)
         .skip(objectPageination.skip);
+
+    for (const record of records){
+        const user = await Account.findOne({
+            _id: record.createdBy.account_id,
+        });
+
+        if(user){
+            record.accountFullName = user.fullName;
+        }
+    }
 
     res.render("admin/pages/products/index", {
         pageTitle: "Danh sách sản phẩm",
@@ -117,7 +128,10 @@ module.exports.changeMulti = async (req, res) => {
                 }
             }, {
                 deleted: true,
-                deletedAt: new Date()
+                deletedBy:{
+                    account_id: res.locals.user.id,
+                    deletedAt: new Date(),
+                },
             });
             req.flash("success", `đã xóa thành công ${ids.length} sản phẩm!`);
             break;
@@ -147,15 +161,18 @@ module.exports.deleteItem = async (req, res) => {
     // console.log(req.params);// in ra status vs id (trong route cua url)
     const id = req.params.id;
 
-    await Product.deleteOne({
-        _id: id
-    }); // xoa cung
-    // await Product.updateOne({
+    // await Product.deleteOne({
     //     _id: id
-    // }, {
-    //     deleted: true,
-    //     deletedAt: new Date()
-    // }); // xoa mem
+    // }); // xoa cung
+    await Product.updateOne({
+        _id: id
+    }, {
+        deleted: true,
+        deletedBy:{
+            account_id: res.locals.user.id,
+            deletedAt: new Date(),
+        },
+    }); // xoa mem
 
     req.flash("success", "Đã xóa thành công!");
 
@@ -191,8 +208,14 @@ module.exports.createPost = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
+    req.body.createdBy = {
+        account_id: res.locals.user.id,
+    };
+
     const record = new Product(req.body);
     await record.save();
+
+    req.flash("success", "Tạo mới sản phẩm thành công!");
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 };

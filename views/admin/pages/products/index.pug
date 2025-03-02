@@ -5,6 +5,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 
 block main
@@ -39,7 +40,7 @@ block main
                             +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
 
                     .col-4
-                        if (role.permissions.includes("products_create"))
+                        if (role.permissions.includes("products-create"))
                             a(
                                 href=`${prefixAdmin}/products/create`
                                 class="btn btn-outline-success"
@@ -61,6 +62,7 @@ block main
                             th Giá
                             th Vị trí
                             th Trạng Thái
+                            th Người tạo
                             th Hành động    
 
                     tbody
@@ -117,6 +119,10 @@ block main
                                             span(
                                                 class="badge badge-danger"
                                             ) Dừng hoạt động 
+                                td 
+                                    p #{item.accountFullName}
+                                    p 
+                                        +formatDateTime(item.createdBy.createdAt)
                                 td  
                                     a(
                                         href=`${prefixAdmin}/products/detail/${item.id}`

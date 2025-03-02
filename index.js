@@ -1,5 +1,7 @@
 const express = require("express");
 
+const moment = require("moment");
+
 const path = require("path"); // tinymce
 
 // cookie-parser
@@ -64,6 +66,7 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 
 // app local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment = moment;
 
 // Router
 routeClient(app);
