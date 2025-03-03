@@ -11,7 +11,7 @@ module.exports.index = async (req, res) => {
     });
 
     if (cart.products.length > 0) {
-        for(const item of cart.products){
+        for (const item of cart.products) {
             const productId = item.product_id;
 
             const productInfo = await Product.findOne({
@@ -32,7 +32,6 @@ module.exports.index = async (req, res) => {
         cartDetail: cart,
     });
 }
-
 
 // [Post] /cart/add/:productId
 module.exports.addPost = async (req, res) => {
@@ -69,7 +68,28 @@ module.exports.addPost = async (req, res) => {
         });
     }
 
+
     req.flash("success", "thêm sản phẩm vào giỏ hàng thành công");
+
+    res.redirect("back");
+}
+
+// [DELETE] /cart/delete/:productId
+module.exports.delete = async (req, res) => {
+    const productId = req.params.productId;
+    const cartId = req.cookies.cartId;
+
+    await Cart.updateOne({
+        _id: cartId,
+    }, {
+        "$pull": {
+            products: {
+                "product_id": productId
+            }
+        }
+    });
+
+    req.flash("success", "Đã xóa sản phẩm khỏi giỏ hàng");
 
     res.redirect("back");
 }
