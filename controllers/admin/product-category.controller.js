@@ -7,10 +7,6 @@ const filterStatusHelper = require("../../helpers/filterStatus");
 
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
-    let find = {
-        deleted: false
-    };
-
     // Bộ lọclọc
     const filterStatus = filterStatusHelper(req.query);
     // end bộ lọc 
@@ -37,7 +33,9 @@ module.exports.index = async (req, res) => {
     }
     // end Sort
 
-    const records = await ProductCategory.find(find)
+    const records = await ProductCategory.find({
+            deleted: false
+        })
         .sort(sort)
 
     const newRecords = createTreeHelper.tree(records);
