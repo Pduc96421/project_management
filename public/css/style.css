@@ -45,7 +45,7 @@
 }
 
 .box-head .inner-title {
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     margin-bottom: 0;
     font-size: 28px;
     font-weight: 600;
