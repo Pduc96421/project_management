@@ -17,11 +17,11 @@ module.exports.registerPost = async (req, res) => {
         deleted: false,
     });
 
-    if(exitsEmail){
+    if (exitsEmail) {
         req.flash("error", "Email đã tồn tại");
         res.redirect("back");
         return;
-    } 
+    }
 
     req.body.password = md5(req.body.password);
 
@@ -30,5 +30,45 @@ module.exports.registerPost = async (req, res) => {
 
     res.cookie("tokenUser", user.tokenUser);
 
+    res.redirect("/");
+}
+
+//[Get] /user/login
+module.exports.login = async (req, res) => {
+    res.render("client/pages/user/login", {
+        pageTitle: "Đăng nhập tài khoản",
+    });
+}
+
+//[Post] /user/login
+module.exports.loginPost = async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const user = await User.findOne({
+        email: email,
+        deleted: false,
+    });
+
+    if (!user) {
+        req.flash("error", "Email không tồn tại");
+        req.redirect("back");
+        return;
+    }
+
+    if(md5(password) != user.password){
+        req.flash("error", "Sai mật khẩu");
+        req.redirect("back");
+        return;
+    }
+
+    if(user.status == "inactive"){
+        req.flash("error", "Tài khoản đang bị khóa");
+        req.redirect("back");
+        return;
+    }
+
+    res.cookie("tokenUser", user.tokenUser);
+    
     res.redirect("/");
 }
