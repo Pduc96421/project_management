@@ -1,6 +1,4 @@
 const express = require("express");
-// multer upload anh
-const multer = require("multer");
 const router = express.Router();
 
 const controller = require("../../controllers/admin/role.controller");

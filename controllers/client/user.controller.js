@@ -56,19 +56,19 @@ module.exports.loginPost = async (req, res) => {
 
     if (!user) {
         req.flash("error", "Email không tồn tại");
-        req.redirect("back");
+        res.redirect("back");
         return;
     }
 
     if (md5(password) != user.password) {
         req.flash("error", "Sai mật khẩu");
-        req.redirect("back");
+        res.redirect("back");
         return;
     }
 
     if (user.status == "inactive") {
         req.flash("error", "Tài khoản đang bị khóa");
-        req.redirect("back");
+        res.redirect("back");
         return;
     }
 
