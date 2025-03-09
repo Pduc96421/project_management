@@ -12,8 +12,13 @@ const authRoutes = require("./auth.route");
 const myAccountRoutes = require("./my-account.route");
 const settingRoutes = require("./setting.route");
 
+const authController = require("../../controllers/admin/auth.controller");
+
 module.exports = (app) => {
     const Path_ADMIN = systemConfig.prefixAdmin;
+
+    app.get(Path_ADMIN + "/", authController.login);
+
     app.use(
         Path_ADMIN + "/dasboard",
         authMiddleware.requireAuth,
