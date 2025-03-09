@@ -19,6 +19,10 @@ const bodyParser = require("body-parser");
 // method override (trong pug dùng được patch)
 const methodOverride = require("method-override");
 
+// socket.io
+const http = require("http");
+const { Server } = require("socket.io");
+
 require("dotenv").config();
 
 // app local
@@ -50,6 +54,14 @@ app.use(express.static(`${__dirname}/public`)); // co the su dung public de show
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
+// socketIO
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on("connection",  (socket) => {
+    console.log('a user connected', socket.id);
+});
+
 // flash
 app.use(cookieParser('Ducno96421'));
 app.use(session({
@@ -78,6 +90,6 @@ app.get("*", (req, res) => {
     });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });
