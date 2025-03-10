@@ -136,5 +136,8 @@ if (emojiPicker) {
 // end  Show Icon Chat
 
 // FileUploadWithPreview
-// const upload = new FileUploadWithPreview.FileUploadWithPreview('upload-images');
+// const upload = new FileUploadWithPreview.FileUploadWithPreview('upload-images', {
+//     multiple: true,
+//     maxFileCount: 6
+// });
 //end FileUploadWithPreview

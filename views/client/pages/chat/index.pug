@@ -3,6 +3,9 @@ include ../../mixins/box-head.pug
 
 block main 
     .container.my-3
+
+        include ../../partials/list-btn-users.pug
+
         .row    
             .col-12 
                 +box-head("Chat")
@@ -20,8 +23,8 @@ block main
                                 if(chat.content)
                                     .inner-content  #{chat.content}
                         div(class="inner-list-typing")
-                    //- .inner-preview-images
-                    //-     div(class="custom-file-container" data-upload-id="upload-images")
+                    .inner-preview-images
+                        div(class="custom-file-container" data-upload-id="upload-images")
                     .inner-foot
                         form(
                             class="inner-form"
@@ -36,6 +39,10 @@ block main
                                 button-icon
                                 class="btn btn-sm btn-light mx-1"
                             ) <i class="fa-regular fa-face-smile"></i>
+                            label(
+                                for="file-upload-with-preview-upload-images"
+                                class="btn btn-sm btn-light mr-1 mb-0"
+                            ) <i class="fa-regular fa-image"></i>
                             button
                                 i.fa-solid.fa-paper-plane
                 
