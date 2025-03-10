@@ -1,5 +1,54 @@
 import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js';
 
+// show typing 
+var timeOut;
+const showTyping = () => {
+    socket.emit("CLIENT_SEND_TYPING", "show");
+
+    clearTimeout(timeOut);
+
+    timeOut = setTimeout(() => {
+        socket.emit("CLIENT_SEND_TYPING", "hidden");
+    }, 5000);
+}
+// end show typing 
+
+//SERVER_RETURN_TYPING
+const elementListTyping = document.querySelector(".chat .inner-list-typing");
+if (elementListTyping) {
+    socket.on("SERVER_RETURN_TYPING", (data) => {
+        if (data.type == "show") {
+            const exitsTyping = elementListTyping.querySelector(`[user-id="${data.userId}"]`);
+            const bodyChat = document.querySelector(".chat .inner-body");
+
+            if (!exitsTyping) {
+                const boxTyping = document.createElement("div");
+                boxTyping.classList.add("box-typing");
+                boxTyping.setAttribute("user-id", data.userId);
+
+                boxTyping.innerHTML = `
+                    <div class="inner-name">${data.fullName}</div>
+                    <div class="inner-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                `;
+
+                elementListTyping.appendChild(boxTyping);
+                bodyChat.scrollTop = bodyChat.scrollHeight;
+            }
+        } else {
+            const boxTypingRemove = elementListTyping.querySelector(`[user-id="${data.userId}"]`);
+
+            if (boxTypingRemove) {
+                elementListTyping.removeChild(boxTypingRemove);
+            }
+        }
+    });
+}
+//END SERVER_RETURN_TYPING
+
 // CLIENT_SEND_MESSAGE
 const formSentData = document.querySelector(".chat .inner-form");
 if (formSentData) {
@@ -65,19 +114,6 @@ if (buttonIcon) {
 }
 // End Show Popup Icon
 
-// show typing 
-var timeOut;
-const showTyping = () => {
-    socket.emit("CLIENT_SEND_TYPING", "show");
-
-    clearTimeout(timeOut);
-
-    timeOut = setTimeout(() => {
-        socket.emit("CLIENT_SEND_TYPING", "hidden");
-    }, 5000);
-}
-// end show typing 
-
 //  Show Icon Chat
 
 const emojiPicker = document.querySelector('emoji-picker');
@@ -99,38 +135,6 @@ if (emojiPicker) {
 }
 // end  Show Icon Chat
 
-//SERVER_RETURN_TYPING
-const elementListTyping = document.querySelector(".chat .inner-list-typing");
-if (elementListTyping) {
-    socket.on("SERVER_RETURN_TYPING", (data) => {
-        if (data.type == "show") {
-            const exitsTyping = elementListTyping.querySelector(`[user-id="${data.userId}"]`);
-            const bodyChat = document.querySelector(".chat .inner-body");
-
-            if (!exitsTyping) {
-                const boxTyping = document.createElement("div");
-                boxTyping.classList.add("box-typing");
-                boxTyping.setAttribute("user-id", data.userId);
-
-                boxTyping.innerHTML = `
-                    <div class="inner-name">${data.fullName}</div>
-                    <div class="inner-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                `;
-
-                elementListTyping.appendChild(boxTyping);
-                bodyChat.scrollTop = bodyChat.scrollHeight;
-            }
-        } else {
-            const boxTypingRemove = elementListTyping.querySelector(`[user-id="${data.userId}"]`);
-
-            if (boxTypingRemove) {
-                elementListTyping.removeChild(boxTypingRemove);
-            }
-        }
-    });
-}
-//END SERVER_RETURN_TYPING
+// FileUploadWithPreview
+// const upload = new FileUploadWithPreview.FileUploadWithPreview('upload-images');
+//end FileUploadWithPreview
