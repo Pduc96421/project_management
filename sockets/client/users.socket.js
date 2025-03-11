@@ -53,6 +53,16 @@ module.exports = async (res) => {
                 lengthAcceptFriends: lengthAcceptFriends,
             });
 
+            // lấy thông tin của A trả về cho B
+            const infoUserA = await User.findOne({
+                _id: myUserId,
+            }).select("id avatar fullName");
+
+            socket.broadcast.emit("SERVER_RETURN_INFO_ACCEPT_FRIEND", {
+                userId: userId,
+                infoUserA: infoUserA,
+            });
+
         });
         // end người dùng gửi yêu cầu kết bạn
 
@@ -79,6 +89,17 @@ module.exports = async (res) => {
                 },
             });
 
+            // lấy độ dài acceptFriends của B trả về cho B
+            const infoUserB = await User.findOne({
+                _id: userId,
+            });
+
+            const lengthAcceptFriends = infoUserB.acceptFriends.length;
+
+            socket.broadcast.emit("SERVER_RETURN_LENGHT_ACCEPT_FRIEND", {
+                userId: userId,
+                lengthAcceptFriends: lengthAcceptFriends,
+            });
 
         });
         // end người dùng hủy gửi yêu cầu kết bạn 
@@ -121,7 +142,7 @@ module.exports = async (res) => {
 
         });
         // end người dùng từ chối yêu cầu kết bạn 
-        
+
         // chấp nhận kết bạn
         socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
             const myUserId = res.locals.user.id;
@@ -138,7 +159,7 @@ module.exports = async (res) => {
                     _id: myUserId,
                 }, {
                     $push: {
-                        friendList: { 
+                        friendList: {
                             user_id: userId,
                             room_chat_id: "",
                         }
@@ -161,7 +182,7 @@ module.exports = async (res) => {
                     _id: userId,
                 }, {
                     $push: {
-                        friendList: { 
+                        friendList: {
                             user_id: myUserId,
                             room_chat_id: "",
                         }
