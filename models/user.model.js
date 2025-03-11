@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
         },
         phone: String,
         avatar: String,
-        acceptFrients: Array,
+        acceptFriends: Array,
         requestFriends: Array,
         friendList: [
             {

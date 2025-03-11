@@ -9,7 +9,7 @@ module.exports = async (res) => {
             // a)Thêm id của A vào acceptFriends của B
             const existUserAInB = await User.findOne({
                 _id: userId,
-                acceptFrients: myUserId,
+                acceptFriends: myUserId,
             });
 
             if (!existUserAInB) {
@@ -17,7 +17,7 @@ module.exports = async (res) => {
                     _id: userId,
                 }, {
                     $push: {
-                        acceptFrients: myUserId
+                        acceptFriends: myUserId
                     },
                 });
             }
@@ -50,7 +50,7 @@ module.exports = async (res) => {
                 _id: userId,
             }, {
                 $pull: {
-                    acceptFrients: myUserId
+                    acceptFriends: myUserId
                 },
             });
 
@@ -67,5 +67,45 @@ module.exports = async (res) => {
 
         });
         // end người dùng hủy gửi yêu cầu kết bạn 
+
+        // người dùng từ chối yêu cầu kết bạn
+        socket.on("CLIENT_REFUSE_FRIEND", async (userId) => {
+            const myUserId = res.locals.user.id;
+
+            // a)Xóa id của A trong acceptFriends của B
+            const existUserAInB = await User.findOne({
+                _id: myUserId,
+                acceptFriends: userId,
+            });
+
+            if (existUserAInB) {
+                await User.updateOne({
+                    _id: myUserId,
+                }, {
+                    $pull: {
+                        acceptFriends: userId,
+                    },
+                });
+            }
+
+            // b)Xóa id của B trong requestFriends của A
+            const existUserBInA = await User.findOne({
+                _id: userId,
+                requestFriends: myUserId,
+            });
+
+            if (existUserBInA) {
+                await User.updateOne({
+                    _id: userId,
+                }, {
+                    $pull: {
+                        requestFriends: myUserId,
+                    },
+                });
+            }
+
+        });
+        // end người dùng từ chối yêu cầu kết bạn 
+        
     });
 }
