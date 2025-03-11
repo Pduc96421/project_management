@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
             default: false
         },
         deletedAt: Date,
-        
+        statusOnline: String,
     }, 
     {
         timestamps: true

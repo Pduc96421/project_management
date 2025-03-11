@@ -6,6 +6,9 @@ const Cart = require("../../models/cart.model");
 
 const generateHelper = require("../../helpers/generate");
 const sendMailHepler = require("../../helpers/sendMail");
+const {
+    MongoUnexpectedServerResponseError
+} = require("mongodb");
 
 //[Get] /user/register
 module.exports.register = async (req, res) => {
@@ -74,6 +77,12 @@ module.exports.loginPost = async (req, res) => {
 
     res.cookie("tokenUser", user.tokenUser);
 
+    await User.updateOne({
+        _id: user.id,
+    }, {
+        statusOnline: "online",
+    });
+
     // luu user_id vao collection
     const cartId = req.cookies.cartId;
     await Cart.updateOne({
@@ -87,6 +96,13 @@ module.exports.loginPost = async (req, res) => {
 
 //[Get] /user/logout
 module.exports.logout = async (req, res) => {
+    
+    await User.updateOne({
+        _id: res.locals.user.id,
+    }, {
+        statusOnline: "offline",
+    });
+
     res.clearCookie("tokenUser");
     res.redirect("/");
 }
