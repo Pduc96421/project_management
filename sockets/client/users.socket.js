@@ -6,6 +6,9 @@ module.exports = async (res) => {
         socket.on("CLIENT_ADD_FRIEND", async (userId) => {
             const myUserId = res.locals.user.id;
 
+            // console.log(myUserId) // id cua A
+            // console.log(userId) // id cua B
+
             // a)Thêm id của A vào acceptFriends của B
             const existUserAInB = await User.findOne({
                 _id: userId,
@@ -37,6 +40,18 @@ module.exports = async (res) => {
                     },
                 });
             }
+
+            // lấy độ dài acceptFriends của B trả về cho B
+            const infoUserB = await User.findOne({
+                _id: userId,
+            });
+
+            const lengthAcceptFriends = infoUserB.acceptFriends.length;
+
+            socket.broadcast.emit("SERVER_RETURN_LENGHT_ACCEPT_FRIEND", {
+                userId: userId,
+                lengthAcceptFriends: lengthAcceptFriends,
+            });
 
         });
         // end người dùng gửi yêu cầu kết bạn
@@ -158,5 +173,7 @@ module.exports = async (res) => {
             }
         });
         // end chấp nhận kết bạn
+
+
     });
 }
