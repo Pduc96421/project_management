@@ -15,7 +15,9 @@ module.exports.notFriend = async (req, res) => {
     });
 
     const requestFriends = myUser.requestFriends;
-    const acceptFriends = myUser.acceptFrients;
+    const acceptFriends = myUser.acceptFriends;
+    const friendList = myUser.friendList;
+    const friendListId = friendList.map(item => item.user_id);
 
     const users = await User.find({
         $and: [{
@@ -32,7 +34,12 @@ module.exports.notFriend = async (req, res) => {
                 _id: {
                     $nin: acceptFriends
                 }
-            }
+            },
+            {
+                _id: {
+                    $nin: friendListId
+                }
+            },
         ],
         status: "active",
         deleted: false,
@@ -59,7 +66,9 @@ module.exports.request = async (req, res) => {
     const requestFriends = myUser.requestFriends;
 
     const users = await User.find({
-        _id : { $in: requestFriends },
+        _id: {
+            $in: requestFriends
+        },
         status: "active",
         deleted: false,
     }).select("fullName avatar id");
@@ -87,7 +96,9 @@ module.exports.accept = async (req, res) => {
     const acceptFriends = myUser.acceptFriends;
 
     const users = await User.find({
-        _id : { $in: acceptFriends },
+        _id: {
+            $in: acceptFriends
+        },
         status: "active",
         deleted: false,
     }).select("id fullName avatar");
