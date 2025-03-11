@@ -28,11 +28,11 @@ module.exports = (app) => {
     app.use("/cart", cartRouter);
 
     app.use("/checkout", checkoutRouter);
-    
-    app.use("/user", userRouter);    
-    
-    app.use("/chat", authMiddlerware.requireAuth, chatRouter);    
-    
-    app.use("/users", authMiddlerware.requireAuth, usersRouter);    
+
+    app.use("/user", userRouter);
+
+    app.use("/chat", authMiddlerware.requireAuth, chatRouter);
+
+    app.use("/users", authMiddlerware.requireAuth, usersRouter);
 
 }

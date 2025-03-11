@@ -83,6 +83,11 @@ module.exports.loginPost = async (req, res) => {
         statusOnline: "online",
     });
 
+    // server trả về thông tin user khi đăng nhập
+    _io.once('connection', (socket) => {
+        socket.broadcast.emit("SERVER_RETURN_USER_ONLINE", user.id);
+    });
+
     // luu user_id vao collection
     const cartId = req.cookies.cartId;
     await Cart.updateOne({
@@ -101,6 +106,11 @@ module.exports.logout = async (req, res) => {
         _id: res.locals.user.id,
     }, {
         statusOnline: "offline",
+    });
+
+    // server trả về thông tin user khi đăng xuat
+    _io.once('connection', (socket) => {
+        socket.broadcast.emit("SERVER_RETURN_USER_OFFLINE", res.locals.user.id);
     });
 
     res.clearCookie("tokenUser");
