@@ -6,12 +6,10 @@ const roomChatSchema = new mongoose.Schema({
     theme: String,
     typeRoom: String,
     status: String,
-    users: [
-        {
-            user_id: String,
-            role: String,
-        }
-    ],
+    users: [{
+        user_id: String,
+        role: String,
+    }],
     deleted: {
         type: Boolean,
         default: false
